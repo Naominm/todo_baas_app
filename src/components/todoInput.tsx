@@ -15,6 +15,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTaskStore } from "../../store/useTaskStore";
 import supabase from "../helper/superbaseClient";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import { getFormattedDate } from "../utils/now.ts";
 
 function TodoInput() {
   const [open, setOpen] = useState(false);
@@ -25,17 +30,25 @@ function TodoInput() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
   const addTask = useTaskStore((state) => state.addTask);
   const AddTodo = async () => {
-    if (taskTitle && listType && startTime && endTime) {
+    if (taskTitle && listType && selectedDate && startTime && endTime) {
+      const formattedStartDate = selectedDate
+        ? selectedDate.format("YYYY-MM-DD")
+        : null;
+      const formattedEndDate = selectedDate
+        ? selectedDate.format("YYYY-MM-DD")
+        : null;
+
       try {
         const { data, error } = await supabase.from("todo").insert([
           {
             title: taskTitle,
             list_type: listType,
-            start_time: startTime,
-            end_time: endTime,
+            start_time: `${formattedStartDate} ${startTime}`,
+            end_time: `${formattedEndDate} ${endTime}`,
           },
         ]);
 
@@ -50,14 +63,15 @@ function TodoInput() {
         addTask({
           title: taskTitle,
           listType: listType,
-          startTime: startTime,
-          endTime: endTime,
+          startTime: `⏲️ ${startTime}`,
+          endTime: ` ${endTime}`,
         });
 
         setTaskTitle("");
         setListType("");
         setStartTime("");
         setEndTime("");
+        setSelectedDate(null);
         setError(null);
         handleClose();
       } catch (e) {
@@ -130,7 +144,17 @@ function TodoInput() {
               <MenuItem value="diet">💪 Diet</MenuItem>
             </Select>
           </FormControl>
-          <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select Date"
+              value={selectedDate}
+              onChange={(newValue) => setSelectedDate(newValue)}
+              slotProps={{ textField: { fullWidth: true, sx: { mt: 3 } } }}
+            />
+          </LocalizationProvider>
+          <Box
+            sx={{ display: "flex", gap: 2, mt: 3, backgroundColor: "#F6F8FA" }}
+          >
             <TextField
               label="Start Time"
               type="time"
