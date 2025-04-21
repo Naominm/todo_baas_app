@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTaskStore } from "../../store/useTaskStore";
+import supabase from "../helper/superbaseClient";
 
 function TodoInput() {
   const [open, setOpen] = useState(false);
@@ -25,26 +26,39 @@ function TodoInput() {
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const addTask = useTaskStore((state) => state.addTask);
-
-  const handleError = () => {
-    return <Alert severity="error" sx={{ mt: 10 }}></Alert>;
-  };
-
-  const AddTodo = () => {
+  // const addTask = useTaskStore((state) => state.addTask);
+  const AddTodo = async () => {
     if (taskTitle && listType && startTime && endTime) {
-      addTask({
-        title: taskTitle,
-        listType,
-        startTime,
-        endTime,
-      });
-      setTaskTitle("");
-      setListType("");
-      setStartTime("");
-      setEndTime("");
-      setError(null);
-      handleClose();
+      try {
+        const { data, error } = await supabase
+          .from("todo")
+          .insert([
+            {
+              title: taskTitle,
+              list_type: listType,
+              start_time: startTime,
+              end_time: endTime,
+            },
+          ]);
+
+        console.log("Insert result:", { data, error });
+
+        if (error) {
+          console.error("Supabase insert error:", error);
+          setError("Failed to add task. Please try again.");
+          return;
+        }
+
+        setTaskTitle("");
+        setListType("");
+        setStartTime("");
+        setEndTime("");
+        setError(null);
+        handleClose();
+      } catch (e) {
+        console.error("Unexpected error:", e);
+        setError("Something went wrong.");
+      }
     } else {
       setError("Please fill in all fields.");
     }
