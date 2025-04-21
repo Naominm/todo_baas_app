@@ -7,11 +7,12 @@ function SideBar(): React.JSX.Element {
       sx={{
         width: "15rem",
         height: "100vh",
-        backgroundColor: "papayawhip",
+        backgroundColor: "white",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         gap: 2,
+        pt: 5,
       }}
     >
       <FormControlLabel

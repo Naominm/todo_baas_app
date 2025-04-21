@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import now, { getFormattedDate } from "../utils/now.ts";
 import SideBar from "./todoSideNav";
+import TodoInput from "./todoInput.tsx";
 
 function TodoHeroSection() {
   return (
@@ -10,6 +11,7 @@ function TodoHeroSection() {
     >
       <SideBar />
       <TopHero />
+      <TodoInput />
     </Box>
   );
 }
