@@ -10,6 +10,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTaskStore } from "../../store/useTaskStore";
@@ -22,13 +23,15 @@ function TodoInput() {
   const [listType, setListType] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
   const addTask = useTaskStore((state) => state.addTask);
 
-  const handleListChange = (event: SelectChangeEvent) => {
-    setListType(event.target.value);
+  const handleError = () => {
+    return <Alert severity="error" sx={{ mt: 10 }}></Alert>;
   };
 
-  const handleSubmit = () => {
+  const AddTodo = () => {
     if (taskTitle && listType && startTime && endTime) {
       addTask({
         title: taskTitle,
@@ -40,11 +43,19 @@ function TodoInput() {
       setListType("");
       setStartTime("");
       setEndTime("");
+      setError(null);
       handleClose();
+    } else {
+      setError("Please fill in all fields.");
     }
   };
+
+  const handleListChange = (event: SelectChangeEvent) => {
+    setListType(event.target.value);
+  };
+
   return (
-    <Box sx={{ position: "fixed", bottom: 20, left: 250 }}>
+    <Box component="div" sx={{ position: "fixed", bottom: 20, left: 250 }}>
       <Button
         onClick={handleOpen}
         variant="contained"
@@ -58,8 +69,16 @@ function TodoInput() {
       >
         create a new task
       </Button>
+
       <Dialog open={open} onClose={handleClose} sx={{ boxShadow: 10 }}>
         <Box style={{ padding: "2rem", minWidth: "400px" }}>
+          <Box>
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
+          </Box>
           <Box
             sx={{
               display: "flex",
@@ -116,7 +135,7 @@ function TodoInput() {
             variant="contained"
             fullWidth
             sx={{ mt: 3 }}
-            onClick={handleSubmit}
+            onClick={AddTodo}
           >
             Add Task
           </Button>
