@@ -19,6 +19,8 @@ function TodoInput() {
   const handleClose = () => setOpen(false);
   const [taskTitle, setTaskTitle] = useState("");
   const [listType, setListType] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const handleListChange = (event: SelectChangeEvent) => {
     setListType(event.target.value);
@@ -58,6 +60,7 @@ function TodoInput() {
             onChange={(e) => setTaskTitle(e.target.value)}
             sx={{ mb: 3 }}
           />
+
           <FormControl fullWidth>
             <InputLabel id="list-label">Select list</InputLabel>
             <Select
@@ -71,6 +74,26 @@ function TodoInput() {
               <MenuItem value="diet">💪 Diet</MenuItem>
             </Select>
           </FormControl>
+          <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+            <TextField
+              label="Start Time"
+              type="time"
+              fullWidth
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              variant="outlined"
+              focused
+            />
+            <TextField
+              label="End Time"
+              type="time"
+              fullWidth
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              variant="outlined"
+              focused
+            />
+          </Box>
         </Box>
       </Dialog>
     </Box>
