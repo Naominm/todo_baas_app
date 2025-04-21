@@ -1,9 +1,5 @@
-
-
 function TodoInput() {
-    return ( 
-<></>
-     );
+  return <></>;
 }
 
 export default TodoInput;

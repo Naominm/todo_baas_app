@@ -1,12 +1,7 @@
 import SideBar from "./todoSideNav";
 
-
 function Todos() {
-    return ( 
-        <>
-        
-        </>
-     );
+  return <></>;
 }
 
 export default Todos;

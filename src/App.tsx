@@ -1,16 +1,13 @@
-import Todos from "./components/todos"
-import TodoHeroSection from "./components/todoHero"
+import Todos from "./components/todos";
+import TodoHeroSection from "./components/todoHero";
 
 function App() {
-
-
   return (
     <>
-     <Todos/>
-     <TodoHeroSection/>
+      <Todos />
+      <TodoHeroSection />
     </>
-  )
+  );
 }
 
-export default App
-
+export default App;
