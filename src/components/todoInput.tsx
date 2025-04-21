@@ -12,6 +12,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTaskStore } from "../../store/useTaskStore";
 
 function TodoInput() {
   const [open, setOpen] = useState(false);
@@ -21,9 +22,26 @@ function TodoInput() {
   const [listType, setListType] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const addTask = useTaskStore((state) => state.addTask);
 
   const handleListChange = (event: SelectChangeEvent) => {
     setListType(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (taskTitle && listType && startTime && endTime) {
+      addTask({
+        title: taskTitle,
+        listType,
+        startTime,
+        endTime,
+      });
+      setTaskTitle("");
+      setListType("");
+      setStartTime("");
+      setEndTime("");
+      handleClose();
+    }
   };
   return (
     <Box sx={{ position: "fixed", bottom: 20, left: 250 }}>
@@ -40,7 +58,7 @@ function TodoInput() {
       >
         create a new task
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} sx={{ boxShadow: 10 }}>
         <Box style={{ padding: "2rem", minWidth: "400px" }}>
           <Box
             sx={{
@@ -94,6 +112,14 @@ function TodoInput() {
               focused
             />
           </Box>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 3 }}
+            onClick={handleSubmit}
+          >
+            Add Task
+          </Button>
         </Box>
       </Dialog>
     </Box>

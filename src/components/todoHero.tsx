@@ -2,8 +2,10 @@ import { Box, Typography } from "@mui/material";
 import now, { getFormattedDate } from "../utils/now.ts";
 import SideBar from "./todoSideNav";
 import TodoInput from "./todoInput.tsx";
+import { useTaskStore } from "../../store/useTaskStore.ts";
 
 function TodoHeroSection() {
+  const tasks = useTaskStore((state) => state.tasks);
   return (
     <Box
       component="div"
@@ -11,6 +13,20 @@ function TodoHeroSection() {
     >
       <SideBar />
       <TopHero />
+      <Box component="div" sx={{ mt: 25, left: 0 }}>
+        {tasks.map((task, index) => (
+          <Box
+            key={index}
+            sx={{ border: "1px solid #ccc", p: 2, borderRadius: 2 }}
+          >
+            <Typography variant="h6">{task.title}</Typography>
+            <Typography variant="body2">List:{task.listType}</Typography>
+            <Typography variant="body2">
+              {task.startTime}-{task.endTime}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
       <TodoInput />
     </Box>
   );
