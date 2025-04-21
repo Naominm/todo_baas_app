@@ -26,20 +26,18 @@ function TodoInput() {
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  // const addTask = useTaskStore((state) => state.addTask);
+  const addTask = useTaskStore((state) => state.addTask);
   const AddTodo = async () => {
     if (taskTitle && listType && startTime && endTime) {
       try {
-        const { data, error } = await supabase
-          .from("todo")
-          .insert([
-            {
-              title: taskTitle,
-              list_type: listType,
-              start_time: startTime,
-              end_time: endTime,
-            },
-          ]);
+        const { data, error } = await supabase.from("todo").insert([
+          {
+            title: taskTitle,
+            list_type: listType,
+            start_time: startTime,
+            end_time: endTime,
+          },
+        ]);
 
         console.log("Insert result:", { data, error });
 
@@ -48,6 +46,13 @@ function TodoInput() {
           setError("Failed to add task. Please try again.");
           return;
         }
+
+        addTask({
+          title: taskTitle,
+          listType: listType,
+          startTime: startTime,
+          endTime: endTime,
+        });
 
         setTaskTitle("");
         setListType("");
