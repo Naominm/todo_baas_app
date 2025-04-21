@@ -2,6 +2,7 @@ import { create } from "zustand";
 import supabase from "../src/helper/superbaseClient";
 
 type Task = {
+  id: number;
   title: string;
   listType: string;
   start_time: string;

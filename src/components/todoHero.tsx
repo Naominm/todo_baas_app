@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Menu, MenuItem, IconButton } from "@mui/material";
 import now, { getFormattedDate } from "../utils/now.ts";
 import SideBar from "./todoSideNav";
 import TodoInput from "./todoInput.tsx";
 import { useTaskStore } from "../../store/useTaskStore.ts";
 import supabase from "../helper/superbaseClient";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 function TodoHeroSection() {
   return (
@@ -22,6 +23,37 @@ function TodoHeroSection() {
 function TopHero() {
   const tasks = useTaskStore((state) => state.tasks);
   const fetchTasks = useTaskStore((state) => state.fetchTasks);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
+
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    taskId: number,
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTaskId(taskId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedTaskId(null);
+  };
+  const handleComplete = () => {
+    console.log("Mark as complete:", selectedTaskId);
+    handleMenuClose();
+  };
+
+  const handleEdit = () => {
+    console.log("Edit task:", selectedTaskId);
+    handleMenuClose();
+  };
+
+  const handleDelete = () => {
+    console.log("Delete task:", selectedTaskId);
+    handleMenuClose();
+  };
 
   useEffect(() => {
     fetchTasks();
@@ -62,8 +94,16 @@ function TopHero() {
             <Typography variant="body2">
               {task.start_time} - {task.end_time}
             </Typography>
+            <IconButton onClick={(e) => handleMenuOpen(e, task.id)}>
+              <MoreVertIcon />
+            </IconButton>
           </Box>
         ))}
+        <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose}>
+          <MenuItem onClick={handleComplete}>Mark as Complete</MenuItem>
+          <MenuItem onClick={handleEdit}>Edit</MenuItem>
+          <MenuItem onClick={handleDelete}>Delete</MenuItem>
+        </Menu>
       </Box>
     </Box>
   );
