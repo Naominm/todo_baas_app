@@ -1,27 +1,27 @@
 import { create } from "zustand";
+import supabase from "../src/helper/superbaseClient";
 
 type Task = {
   title: string;
   listType: string;
-  startTime: string;
-  endTime: string;
+  start_time: string;
+  end_time: string;
 };
 
 type TaskStore = {
   tasks: Task[];
   addTask: (task: Task) => void;
   removeTask: (index: number) => void;
+  fetchTasks: () => Promise<void>;
 };
 
 export const useTaskStore = create<TaskStore>((set) => ({
   tasks: [],
 
   addTask: (task) => {
-    set((currentState) => {
-      return {
-        tasks: [...currentState.tasks, task],
-      };
-    });
+    set((currentState) => ({
+      tasks: [...currentState.tasks, task],
+    }));
   },
   removeTask: (indexToRemove) => {
     set((currentState) => {
@@ -32,5 +32,22 @@ export const useTaskStore = create<TaskStore>((set) => ({
         tasks: newTaskList,
       };
     });
+  },
+  fetchTasks: async () => {
+    try {
+      const { data, error } = await supabase
+        .from("todo")
+        .select("*")
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching tasks:", error);
+        return;
+      }
+
+      set({ tasks: data || [] });
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
   },
 }));

@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import now, { getFormattedDate } from "../utils/now.ts";
 import SideBar from "./todoSideNav";
 import TodoInput from "./todoInput.tsx";
 import { useTaskStore } from "../../store/useTaskStore.ts";
+import supabase from "../helper/superbaseClient";
 
 function TodoHeroSection() {
   return (
@@ -19,6 +21,12 @@ function TodoHeroSection() {
 }
 function TopHero() {
   const tasks = useTaskStore((state) => state.tasks);
+  const fetchTasks = useTaskStore((state) => state.fetchTasks);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
   return (
     <Box
       component="div"
@@ -52,7 +60,7 @@ function TopHero() {
             <Typography variant="body2">{task.title}</Typography>
             <Typography variant="body2">List:{task.listType}</Typography>
             <Typography variant="body2">
-              {task.startTime}-{task.endTime}
+              {task.start_time} - {task.end_time}
             </Typography>
           </Box>
         ))}

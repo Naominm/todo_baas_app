@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Dialog,
@@ -18,8 +18,16 @@ import supabase from "../helper/superbaseClient";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
-import { getFormattedDate } from "../utils/now.ts";
+import { Dayjs } from "dayjs";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+type Task = {
+  id: number;
+  title: string;
+  list_type: string;
+  start_time: string;
+  end_time: string;
+};
 
 function TodoInput() {
   const [open, setOpen] = useState(false);
@@ -31,8 +39,10 @@ function TodoInput() {
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [todos, setTodos] = useState<Task[]>([]);
 
-  const addTask = useTaskStore((state) => state.addTask);
+  // const addTask = useTaskStore((state) => state.addTask);
+
   const AddTodo = async () => {
     if (taskTitle && listType && selectedDate && startTime && endTime) {
       const formattedStartDate = selectedDate
@@ -59,13 +69,6 @@ function TodoInput() {
           setError("Failed to add task. Please try again.");
           return;
         }
-
-        addTask({
-          title: taskTitle,
-          listType: listType,
-          startTime: `⏲️ ${startTime}`,
-          endTime: ` ${endTime}`,
-        });
 
         setTaskTitle("");
         setListType("");

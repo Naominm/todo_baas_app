@@ -1,4 +1,5 @@
 import { Checkbox, FormControlLabel, Box } from "@mui/material";
+import supabase from "../helper/superbaseClient";
 
 function SideBar(): React.JSX.Element {
   return (
