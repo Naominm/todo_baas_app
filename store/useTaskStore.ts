@@ -41,6 +41,7 @@ export const useTaskStore = create<TaskStore>((set) => ({
         .from("todo")
         .select("*")
         .order("created_at", { ascending: true });
+      console.log({ data, error });
 
       if (error) {
         console.error("Error fetching tasks:", error);
