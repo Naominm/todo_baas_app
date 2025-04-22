@@ -30,8 +30,6 @@ function TodoInput() {
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
-  // const addTask = useTaskStore((state) => state.addTask);
-
   const AddTodo = async () => {
     if (taskTitle && listType && selectedDate && startTime && endTime) {
       const formattedStartDate = selectedDate
