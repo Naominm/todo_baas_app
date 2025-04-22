@@ -25,6 +25,7 @@ function TopHero() {
   const fetchTasks = useTaskStore((state) => state.fetchTasks);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
+  const [completedTask, setCompletedTask] = useState<number[]>([]);
 
   const menuOpen = Boolean(anchorEl);
 
@@ -40,9 +41,21 @@ function TopHero() {
     setAnchorEl(null);
     setSelectedTaskId(null);
   };
-  const handleComplete = () => {
-    console.log("Mark as complete:", selectedTaskId);
-    handleMenuClose();
+  const handleComplete = async () => {
+    if (selectedTaskId !== null) {
+      try {
+        const { data, error } = await supabase
+          .from("todo")
+          .update({ completed: true })
+          .eq("id", selectedTaskId);
+        if (error) throw error;
+        fetchTasks();
+      } catch (e) {
+        console.error("error marking as complete", e);
+      } finally {
+        handleMenuClose();
+      }
+    }
   };
 
   const handleEdit = () => {
@@ -89,8 +102,13 @@ function TopHero() {
               backgroundColor: "white",
             }}
           >
-            <Typography variant="body2">{task.title}</Typography>
-            <Typography variant="body2">List:{task.listType}</Typography>
+            <Typography
+              variant="body2"
+              sx={{ textDecoration: task.completed ? "line-through" : "none" }}
+            >
+              {task.title}
+            </Typography>
+            <Typography variant="body2">List:{task.list_type}</Typography>
             <Typography variant="body2">
               {task.start_time} - {task.end_time}
             </Typography>

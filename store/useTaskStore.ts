@@ -4,9 +4,10 @@ import supabase from "../src/helper/superbaseClient";
 type Task = {
   id: number;
   title: string;
-  listType: string;
+  list_type: string;
   start_time: string;
   end_time: string;
+  completed: boolean;
 };
 
 type TaskStore = {
