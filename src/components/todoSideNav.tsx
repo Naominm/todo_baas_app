@@ -38,9 +38,9 @@ function SideBar(): React.JSX.Element {
         label={`work (${workCount})`}
       />
       <FormControlLabel
-        control={<Box sx={{ width: 24 }} />}
-        label={`💪 Diet (${dietCount})`}
+        control={<Checkbox sx={{ color: "blue" }} />}
         sx={{ width: "80%" }}
+        label={`💪 Diet (${dietCount})`}
       />
     </Box>
   );
