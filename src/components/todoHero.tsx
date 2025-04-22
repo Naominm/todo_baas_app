@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Menu, MenuItem, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Menu,
+  MenuItem,
+  IconButton,
+  Input,
+  Button,
+} from "@mui/material";
 import now, { getFormattedDate } from "../utils/now.ts";
 import SideBar from "./todoSideNav";
 import TodoInput from "./todoInput.tsx";
@@ -25,7 +33,8 @@ function TopHero() {
   const fetchTasks = useTaskStore((state) => state.fetchTasks);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
-  const [completedTask, setCompletedTask] = useState<number[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState("");
 
   const menuOpen = Boolean(anchorEl);
 
@@ -44,7 +53,7 @@ function TopHero() {
   const handleComplete = async () => {
     if (selectedTaskId !== null) {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from("todo")
           .update({ completed: true })
           .eq("id", selectedTaskId);
@@ -59,10 +68,31 @@ function TopHero() {
   };
 
   const handleEdit = () => {
-    console.log("Edit task:", selectedTaskId);
-    handleMenuClose();
+    const taskToEdit = tasks.find((task) => task.id === selectedTaskId);
+    if (taskToEdit) {
+      setEditedTitle(taskToEdit.title);
+      setIsEditing(true);
+    }
+    setAnchorEl(null);
   };
 
+  const handleSaveEdit = async () => {
+    if (selectedTaskId !== null) {
+      try {
+        const { error } = await supabase
+          .from("todo")
+          .update({ title: editedTitle })
+          .eq("id", selectedTaskId);
+        if (error) throw error;
+        fetchTasks();
+      } catch (e) {
+        console.error("Error saving edit", e);
+      } finally {
+        setIsEditing(false);
+        setSelectedTaskId(null);
+      }
+    }
+  };
   const handleDelete = () => {
     console.log("Delete task:", selectedTaskId);
     handleMenuClose();
@@ -102,12 +132,31 @@ function TopHero() {
               backgroundColor: "white",
             }}
           >
-            <Typography
-              variant="body2"
-              sx={{ textDecoration: task.completed ? "line-through" : "none" }}
-            >
-              {task.title}
-            </Typography>
+            {isEditing && selectedTaskId === task.id ? (
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Input
+                  type="text"
+                  value={editedTitle}
+                  onChange={(e) => setEditedTitle(e.target.value)}
+                  sx={{
+                    padding: "0.5rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    fontSize: "1rem",
+                  }}
+                />
+                <Button onClick={handleSaveEdit}>save</Button>
+              </Box>
+            ) : (
+              <Typography
+                variant="body2"
+                sx={{
+                  textDecoration: task.completed ? "line-through" : "none",
+                }}
+              >
+                {task.title}
+              </Typography>
+            )}
             <Typography variant="body2">List:{task.list_type}</Typography>
             <Typography variant="body2">
               {task.start_time} - {task.end_time}
