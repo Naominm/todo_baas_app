@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import supabase from "../src/helper/superbaseClient";
+import { persist } from "zustand/middleware";
 
 type Task = {
   id: number;
@@ -17,40 +18,47 @@ type TaskStore = {
   fetchTasks: () => Promise<void>;
 };
 
-export const useTaskStore = create<TaskStore>((set) => ({
-  tasks: [],
+export const useTaskStore = create<TaskStore>()(
+  persist(
+    (set) => ({
+      tasks: [],
 
-  addTask: (task) => {
-    set((currentState) => ({
-      tasks: [...currentState.tasks, task],
-    }));
-  },
-  removeTask: (indexToRemove) => {
-    set((currentState) => {
-      const newTaskList = currentState.tasks.filter((_, index) => {
-        return index !== indexToRemove;
-      });
-      return {
-        tasks: newTaskList,
-      };
-    });
-  },
-  fetchTasks: async () => {
-    try {
-      const { data, error } = await supabase
-        .from("todo")
-        .select("*")
-        .order("created_at", { ascending: true });
-      console.log({ data, error });
+      addTask: (task) => {
+        set((currentState) => ({
+          tasks: [...currentState.tasks, task],
+        }));
+      },
+      removeTask: (indexToRemove) => {
+        set((currentState) => {
+          const newTaskList = currentState.tasks.filter((_, index) => {
+            return index !== indexToRemove;
+          });
+          return {
+            tasks: newTaskList,
+          };
+        });
+      },
+      fetchTasks: async () => {
+        try {
+          const { data, error } = await supabase
+            .from("todo")
+            .select("*")
+            .order("created_at", { ascending: true });
+          console.log({ data, error });
 
-      if (error) {
-        console.error("Error fetching tasks:", error);
-        return;
-      }
+          if (error) {
+            console.error("Error fetching tasks:", error);
+            return;
+          }
 
-      set({ tasks: data || [] });
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-    }
-  },
-}));
+          set({ tasks: data || [] });
+        } catch (error) {
+          console.error("Error fetching tasks:", error);
+        }
+      },
+    }),
+    {
+      name: "task-storage",
+    },
+  ),
+);
