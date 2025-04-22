@@ -27,7 +27,7 @@ export const useTaskStore = create<TaskStore>((set) => ({
   },
   removeTask: (indexToRemove) => {
     set((currentState) => {
-      const newTaskList = currentState.tasks.filter((task, index) => {
+      const newTaskList = currentState.tasks.filter((_, index) => {
         return index !== indexToRemove;
       });
       return {

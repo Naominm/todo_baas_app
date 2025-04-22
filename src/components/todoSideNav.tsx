@@ -1,7 +1,18 @@
 import { Checkbox, FormControlLabel, Box } from "@mui/material";
-import supabase from "../helper/superbaseClient";
+import { useTaskStore } from "../../store/useTaskStore";
 
 function SideBar(): React.JSX.Element {
+  const tasks = useTaskStore((state) => state.tasks);
+  let personalCount = 0;
+  let workCount = 0;
+  let dietCount = 0;
+
+  tasks.forEach((task) => {
+    if (task.list_type === "personal") personalCount++;
+    if (task.list_type === "work") workCount++;
+    if (task.list_type === "💪 Diet") dietCount++;
+  });
+
   return (
     <Box
       component="div"
@@ -17,28 +28,18 @@ function SideBar(): React.JSX.Element {
       }}
     >
       <FormControlLabel
-        control={<Box sx={{ width: 24 }} />}
-        label="Home"
-        sx={{ width: "80%" }}
-      />
-      <FormControlLabel
-        control={<Checkbox sx={{ color: "black" }} />}
-        sx={{ width: "80%" }}
-        label="completed"
-      />
-      <FormControlLabel
         control={<Checkbox sx={{ color: "purple" }} />}
         sx={{ width: "80%" }}
-        label="personal"
+        label={`personal (${personalCount})`}
       />
       <FormControlLabel
         control={<Checkbox sx={{ color: "blue" }} />}
         sx={{ width: "80%" }}
-        label="work"
+        label={`work (${workCount})`}
       />
       <FormControlLabel
         control={<Box sx={{ width: 24 }} />}
-        label="💪 Diet"
+        label={`💪 Diet (${dietCount})`}
         sx={{ width: "80%" }}
       />
     </Box>
