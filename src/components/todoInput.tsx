@@ -78,7 +78,10 @@ function TodoInput() {
   };
 
   return (
-    <Box component="div" sx={{ position: "fixed", bottom: 20, left: 250 }}>
+    <Box
+      component="div"
+      sx={{ position: "fixed", left: "30rem", px: 2, mt: 18, zIndex: 1000 }}
+    >
       <Button
         onClick={handleOpen}
         variant="contained"
@@ -86,7 +89,7 @@ function TodoInput() {
         sx={{
           backgroundColor: "black",
           color: "white",
-          width: "30rem",
+          width: "100%",
           borderRadius: "5rem",
         }}
       >

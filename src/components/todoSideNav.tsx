@@ -20,7 +20,7 @@ function SideBar(): React.JSX.Element {
     <Box
       component="div"
       sx={{
-        width: collapsed ? "4rem" : "15rem",
+        width: collapsed ? "2rem" : { xs: "100%", sm: "15rem" },
         height: "100vh",
         backgroundColor: "white",
         display: "flex",
@@ -40,17 +40,17 @@ function SideBar(): React.JSX.Element {
         <>
           <FormControlLabel
             control={<Checkbox sx={{ color: "purple" }} />}
-            sx={{ width: "80%" }}
+            sx={{ width: "100%", maxWidth: "100%" }}
             label={`personal (${personalCount})`}
           />
           <FormControlLabel
             control={<Checkbox sx={{ color: "blue" }} />}
-            sx={{ width: "80%" }}
+            sx={{ width: "100%", maxWidth: "100%" }}
             label={`work (${workCount})`}
           />
           <FormControlLabel
             control={<Checkbox sx={{ color: "blue" }} />}
-            sx={{ width: "80%" }}
+            sx={{ width: "100%", maxWidth: "100%" }}
             label={`Diet (${dietCount})`}
           />
         </>

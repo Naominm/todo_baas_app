@@ -117,7 +117,7 @@ function TopHero() {
   return (
     <Box
       component="div"
-      sx={{ mt: 5, display: "flex", flexDirection: "column", gap: "2rem" }}
+      sx={{ mt: 8, display: "flex", flexDirection: "column", gap: "2rem" }}
     >
       <Typography variant="h4" sx={{ fontWeight: 600 }}>
         {" "}
@@ -128,7 +128,7 @@ function TopHero() {
       </Typography>
       <Box
         component="div"
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}
       >
         {tasks.map((task, index) => (
           <Box
@@ -137,7 +137,8 @@ function TopHero() {
               border: "1px solid #ccc",
               p: 2,
               borderRadius: 2,
-              width: "50rem",
+              width: "100%",
+              maxWidth: "600px",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -164,12 +165,12 @@ function TopHero() {
                 variant="body2"
                 sx={{
                   textDecoration: task.completed ? "line-through" : "none",
+                  backgroundColor: task.completed ? "red" : "white",
                 }}
               >
                 {task.title}
               </Typography>
             )}
-            <Typography variant="body2">List:{task.list_type}</Typography>
             <Typography variant="body2">
               {formatTime(task.start_time)} - {formatTime(task.end_time)}
             </Typography>
