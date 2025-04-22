@@ -8,7 +8,7 @@ import {
   Input,
   Button,
 } from "@mui/material";
-import now, { getFormattedDate } from "../utils/now.ts";
+import now, { getFormattedDate, formatTime } from "../utils/now.ts";
 import SideBar from "./todoSideNav";
 import TodoInput from "./todoInput.tsx";
 import { useTaskStore } from "../../store/useTaskStore.ts";
@@ -171,7 +171,7 @@ function TopHero() {
             )}
             <Typography variant="body2">List:{task.list_type}</Typography>
             <Typography variant="body2">
-              {task.start_time} - {task.end_time}
+              {formatTime(task.start_time)} - {formatTime(task.end_time)}
             </Typography>
             <IconButton onClick={(e) => handleMenuOpen(e, task.id)}>
               <MoreVertIcon />
