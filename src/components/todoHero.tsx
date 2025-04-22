@@ -93,9 +93,21 @@ function TopHero() {
       }
     }
   };
-  const handleDelete = () => {
-    console.log("Delete task:", selectedTaskId);
-    handleMenuClose();
+  const handleDelete = async () => {
+    if (selectedTaskId !== null) {
+      try {
+        const { error } = await supabase
+          .from("todo")
+          .delete()
+          .eq("id", selectedTaskId);
+        if (error) throw error;
+        fetchTasks();
+      } catch (e) {
+        console.error("Error deleting tasks", e);
+      } finally {
+        handleMenuClose();
+      }
+    }
   };
 
   useEffect(() => {
