@@ -97,7 +97,14 @@ function TodoInput() {
       </Button>
 
       <Dialog open={open} onClose={handleClose} sx={{ boxShadow: 10 }}>
-        <Box style={{ padding: "2rem", width: "100%" }}>
+        <Box
+          style={{
+            padding: "2rem",
+            width: "100%",
+            maxWidth: "500px",
+            overflow: "auto",
+          }}
+        >
           <Box>
             {error && (
               <Alert severity="error" sx={{ mb: 2 }}>

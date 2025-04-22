@@ -28,6 +28,7 @@ function SideBar(): React.JSX.Element {
         alignItems: collapsed ? "center" : "flex-start",
         gap: 2,
         pt: 5,
+        pl: 2,
       }}
     >
       <IconButton
